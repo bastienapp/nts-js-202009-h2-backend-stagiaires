@@ -3,7 +3,7 @@ const router = require('express').Router();
 const authenticateWithJsonWebToken = require('../middleware');
 const Annonce = require('../models/Annonce');
 
-router.get('/', authenticateWithJsonWebToken, async (req, res) => {
+router.get('/', async (req, res) => {
   const { langage } = req.query;
   try {
     const allAnnonces = await Annonce.findAllAnnonces(langage);
