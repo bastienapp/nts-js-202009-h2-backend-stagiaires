@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -7,8 +6,6 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const router = express.Router();
 const connection = require('../config/connection');
-
-router.use(cors());
 
 router.post('/user', (req, res) => {
   const { email, password: pwd, nom, prenom } = req.body;
@@ -45,6 +42,7 @@ router.post('/user', (req, res) => {
                   { expiresIn: '1h' }
                 );
                 const { password, ...user } = results[0];
+                res.header('Access-Control-Allow-Origin', '*');
                 res.status(201).json({ user, token });
               }
             }
@@ -108,6 +106,7 @@ router.post('/company', (req, res) => {
                   JWT_SECRET,
                   { expiresIn: '1h' }
                 );
+                res.header('Access-Control-Allow-Origin', '*');
                 res.status(201).json({ entreprise, token });
               }
             }
