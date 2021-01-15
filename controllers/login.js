@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 const connection = require('../config/connection');
+const authenticateWithJsonWebToken = require('../middleware');
 
 const { JWT_SECRET } = process.env;
 
@@ -40,6 +41,12 @@ router.post('/', (req, res) => {
       }
     );
   }
+});
+
+router.get('/checkAuth', authenticateWithJsonWebToken, (req, res) => {
+  res.status(200).json({
+    success: true,
+  });
 });
 
 module.exports = router;

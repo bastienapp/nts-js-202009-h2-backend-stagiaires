@@ -1,37 +1,17 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 
+const authenticateWithJsonWebToken = require('../middleware');
 const Annonce = require('../models/Annonce');
 
-const { JWT_SECRET } = process.env;
-
-const authenticateWithJsonWebToken = (req, res, next) => {
-  if (req.headers.authorization !== undefined) {
-    const token = req.headers.authorization.split(' ')[1];
-    jwt.verify(token, JWT_SECRET, (err) => {
-      if (err) {
-        res
-          .status(401)
-          .json({ errorMessage: "you're not allowed to access these data" });
-      } else {
-        next();
-      }
-    });
-  } else {
-    res
-      .status(401)
-      .json({ errorMessage: "you're not allowed to access these data" });
-  }
-};
-
 router.get('/', authenticateWithJsonWebToken, async (req, res) => {
+  const { langage } = req.query;
   try {
-    const allAnnonces = await Annonce.findAllAnnonces();
+    const allAnnonces = await Annonce.findAllAnnonces(langage);
 
     if (!allAnnonces.length) {
-      return res.status(404).json({
+      return res.status(204).json({
         success: false,
-        message: '404 Not found.',
+        message: 'No announcements.',
       });
     }
 
@@ -55,9 +35,9 @@ router.get('/:id', authenticateWithJsonWebToken, async (req, res) => {
     const annonce = await Annonce.findOneById(id);
 
     if (!annonce) {
-      return res.status(404).json({
+      return res.status(204).json({
         success: false,
-        message: '404 Not found.',
+        message: 'No announcement.',
       });
     }
 
