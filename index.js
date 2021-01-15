@@ -7,8 +7,10 @@ const root = require('./routes/index');
 const port = process.env.PORT || 8080;
 const app = express();
 
+const { CLIENT_URL } = process.env;
+
 app.use(logger('dev'));
-app.use(cors());
+app.use(cors({ origin: CLIENT_URL }));
 app.use(express.json());
 app.use(
   express.urlencoded({
